@@ -1,38 +1,42 @@
-# OLA-openlab: Accessible Infrastructure for Molecular Biology
+# High-Speed Benchtop Microcentrifuge
 
-## Project Context and Background
+## Project Description
 
-This repository documents the practical output of a Master's Thesis project in Industrial Design at the Academy of Fine Arts in Warsaw (Faculty of Design), supervised by dr hab. Agata Szydłowska.
+The OLA High-Speed Microcentrifuge is an open-hardware centrifugal separation platform engineered for basic biological sample processing, such as cell pelleting, reagent spin-down, and nucleic acid extraction. 
 
-The project, titled "Democratization of Science – Accessible Laboratory Equipment," addresses the systemic barriers in accessing fundamental scientific infrastructure. In low-resource academic settings, field research, and educational environments, high-end scientific tools remain largely inaccessible due to prohibitive commercial pricing, closed proprietary hardware models, and supply chain constraints.
+Commercial microcentrifuges represent a substantial capital expenditure for resource-constrained laboratories, with market prices ranging from $2,200 to $11,000 USD. This module provides a low-cost alternative using readily available industrial electronics and 3D-printed mechanical components.
 
-To tackle this disparity, the OLA-openlab ecosystem provides an open-hardware alternative for molecular biology workflows. Grounded in the principles of Open Design, RepRap digital fabrication, and off-the-shelf component integration, this suite aims to bridge the gap between raw DIY functional hacks and professional laboratory tools that inspire user trust and offer sound ergonomic operation.
+Development focused on rotor integrity, tube containment, and structural containment:
 
-## System Overview
+* **Rotor Geometry and Safety:** Early open-slot rotor designs posed severe risks of tube displacement under high centrifugal acceleration. The finalized design features a closed 45-degree fixed-angle rotor geometry that fully supports the walls of standard 1.5 mL and 2.0 mL microcentrifuge tubes (Eppendorf style), constraining radial displacement and preventing mechanical shear.
+* **Structural Frame:** The chassis houses the drive motor, bearing assemblies, and speed control module within a compact desktop form factor.
 
-The ecosystem comprises three open-source instruments designed for basic biological sample processing and molecular diagnostics:
+## System Components
 
-* **Precision Mechanical Micropipette:** A fully 3D-printed liquid handling system featuring an integrated compliant spring printed in PETG. It uses low-cost, universally available glass or plastic Pasteur pipettes as fluid conduits to achieve repeatable, pre-calibrated liquid dosing without requiring metallic coil springs.
-* **High-Speed Microcentrifuge:** A benchtop centrifugal separation unit built around a high-torque RS-550 DC motor and HW-201 PWM controller. It utilizes a closed 45-degree angle rotor geometry designed to support standard 1.5 mL / 2.0 mL microcentrifuge tubes under high radial acceleration.
-* **ESP32 PCR Thermal Cycler:** An automated nucleic acid amplification system powered by an ESP32 microcontroller, a TEC1-12715 Peltier module, and a BTS7960B H-bridge driver. The firmware incorporates an asynchronous web server for protocol management and a thermal mass compensation algorithm for target temperature dwell cycles.
+The hardware setup utilizes off-the-shelf industrial components:
 
-## Subdirectory Structure
+* **Drive Motor:** RS-550 High-Torque DC Motor (12V–21V operating range).
+* **Speed Controller:** HW-201 DC Motor PWM Speed Regulator for manual speed control.
+* **Radial Bearings:** Sealed ball bearings to support the motor driveshaft and maintain rotational alignment.
+* **Power Supply:** External 12V DC power adapter or battery pack.
+* **Chassis and Rotor:** FDM 3D-printed protective enclosure, lid, and fixed-angle rotor.
 
-* `/micropipette/` – CAD source files (.step, .f3z), fabrication guidelines, and operating protocols for the mechanical pipette.
-* `/centrifuge/` – Rotor designs, dynamic balancing parameters, and electrical schematics for the benchtop centrifuge.
-* `/pcr_cycler/` – Thermal block designs, ESP32 control firmware, and circuit wiring diagrams for the thermal cycler.
-* `/docs/` – Theoretical thesis documentation, empirical measurement records, and presentation materials.
+## Application and Operating Protocol
+
+The unit is designed for rapid phase separation and sample consolidation in molecular workflows:
+
+1. **Balanced Loading:** Samples must be loaded in opposing slots with equal mass (balanced to $\pm 0.01\text{ g}$) to minimize rotational kinetic imbalance.
+2. **Speed Regulation:** Power is applied via the HW-201 PWM dial, gradually increasing rotational velocity to avoid sudden mechanical strain on the drive shaft.
+3. **Spin-Down Cycle:** The rotor maintains high-speed rotation for the prescribed protocol duration, after which power is cut and the rotor coasts to a complete stop before opening the lid.
+
+## Fabrication Guidelines
+
+* **Structural Body:** Printable on standard FDM printers ($220 \times 220 \times 250\text{ mm}$ minimum build volume).
+* **Material Selection:** PETG or ABS is required for the rotor and structural housing due to dynamic tensile strength requirements under high rotational loads. PLA is not recommended due to brittle failure risks.
+* **Rotor Print Settings:** The rotor must be printed with 100% solid infill (concentric pattern) and at least 6 wall perimeters to eliminate internal air voids that cause dynamic weight imbalance.
 
 ## Directions for Future Development
 
-The repository is structured as a baseline framework intended for continuous, community-driven iteration:
-
-* **Empirical Validation and Standards:** Conducting systematic gravimetric testing (ISO 8655 compliance) for the micropipette and thermal mapping across the PCR aluminum block to publish standard deviation figures.
-* **Material Resilience in Lab Environments:** Testing alternative chemical-resistant filaments (PETG, ASA, resin-coated surfaces) against prolonged exposure to harsh laboratory reagents, such as ethanol and sodium hypochlorite.
-* **Hardware Expansion:** Development of integrated optical modules for real-time quantitative PCR (qPCR) detection and active safety lid locks for high-speed centrifugation.
-
-## Licensing
-
-* **Firmware:** Distributed under the [GNU General Public License v3.0 (GPLv3)](LICENSE).
-* **Hardware Designs & 3D Models:** Licensed under [CERN Open Hardware Licence Strongly Reciprocal (CERN-OHL-S v2)](https://ohwr.org/cernohl).
-* **Documentation & Written Materials:** Licensed under [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
+* **Dampening and Vibration Isolation System:** The current dampening element requires significant further refinement. High vibrational noise and dynamic instability at maximum rotational speeds remain a primary mechanical challenge. Future work must focus on developing improved elastomeric mounts, spring-suspended motor cradles, or tuned vibration dampeners.
+* **Rotational Speed Telemetry:** Integration of an optical or Hall-effect tachometer sensor connected to a microcontroller for real-time display of RPM and Relative Centrifugal Force ($RCF / g\text{-force}$).
+* **Lid Interlock Mechanism:** Implementation of a physical solenoid or servo-driven safety lock to prevent the enclosure from being opened while the motor is spinning.
